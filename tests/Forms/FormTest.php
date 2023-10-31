@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 /**
  * Caldera Forms
- * Form builder layer, part of Vecode Caldera
+ * Form builder, part of Vecode Caldera
  * @author  biohzrdmx <github.com/biohzrdmx>
  * @copyright Copyright (c) 2023 Vecode. All rights reserved
  */
