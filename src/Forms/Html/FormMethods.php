@@ -9,10 +9,9 @@ declare(strict_types = 1);
  * @copyright Copyright (c) 2023 Vecode. All rights reserved
  */
 
-namespace Caldera\Forms;
+namespace Caldera\Forms\Html;
 
-enum FormEncTypes: string {
-    case UrlEncoded = 'application/x-www-form-urlencoded';
-    case Multipart = 'multipart/form-data';
-    case Plain = 'text/plain';
+enum FormMethods: string {
+    case Get = 'get';
+    case Post = 'post';
 }

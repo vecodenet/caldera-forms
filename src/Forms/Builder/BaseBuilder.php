@@ -9,14 +9,17 @@ declare(strict_types = 1);
  * @copyright Copyright (c) 2023 Vecode. All rights reserved
  */
 
-namespace Caldera\Forms\Fields;
+namespace Caldera\Forms\Builder;
 
-class Textarea extends AbstractField {
+class BaseBuilder extends AbstractBuilder {
 
     /**
      * @inheritdoc
      */
-    public function render(): void {
-        $this->form->getRenderer()->renderTextarea($this);
-    }
+    protected string $group_class = 'mb-3';
+
+    /**
+     * @inheritdoc
+     */
+    protected string $label_class = 'mb-1';
 }

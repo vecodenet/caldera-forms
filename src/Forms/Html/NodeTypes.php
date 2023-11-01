@@ -9,10 +9,9 @@ declare(strict_types = 1);
  * @copyright Copyright (c) 2023 Vecode. All rights reserved
  */
 
-namespace Caldera\Forms\Fields;
+namespace Caldera\Forms\Html;
 
-enum ButtonTypes: string {
-    case Button = 'button';
-    case Reset = 'reset';
-    case Submit = 'submit';
+enum NodeTypes: string {
+    case Element = 'element';
+    case Text = 'text';
 }

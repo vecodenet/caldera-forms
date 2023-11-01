@@ -9,7 +9,7 @@ declare(strict_types = 1);
  * @copyright Copyright (c) 2023 Vecode. All rights reserved
  */
 
-namespace Caldera\Forms\Fields;
+namespace Caldera\Forms\Html;
 
 enum InputTypes: string {
     case Button = 'button';

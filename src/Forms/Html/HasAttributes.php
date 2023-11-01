@@ -9,7 +9,9 @@ declare(strict_types = 1);
  * @copyright Copyright (c) 2023 Vecode. All rights reserved
  */
 
-namespace Caldera\Forms;
+namespace Caldera\Forms\Html;
+
+use Closure;
 
 trait HasAttributes {
 
@@ -19,54 +21,9 @@ trait HasAttributes {
     protected array $attributes = [];
 
     /**
-     * Set class attribute
-     * @param  string $class Class attribute value
-     * @return $this
+     * Callbacks array
      */
-    public function class(string $class): self {
-        $this->setAttribute('class', $class);
-        return $this;
-    }
-
-    /**
-     * Set disabled attribute
-     * @param  bool $disabled Disabled attribute value
-     * @return $this
-     */
-    public function disabled(bool $disabled = true): self {
-        $this->setAttribute('disabled', $disabled);
-        return $this;
-    }
-
-    /**
-     * Set id attribute
-     * @param  string $id ID attribute value
-     * @return $this
-     */
-    public function id(string $id): self {
-        $this->setAttribute('id', $id);
-        return $this;
-    }
-
-    /**
-     * Set readonly attribute
-     * @param  bool $readonly Required attribute value
-     * @return $this
-     */
-    public function readonly(bool $readonly = true): self {
-        $this->setAttribute('readonly', $readonly);
-        return $this;
-    }
-
-    /**
-     * Set required attribute
-     * @param  bool $required Required attribute value
-     * @return $this
-     */
-    public function required(bool $required = true): self {
-        $this->setAttribute('required', $required);
-        return $this;
-    }
+    protected array $callbacks = [];
 
     /**
      * Add attribute
@@ -74,10 +31,30 @@ trait HasAttributes {
      * @param string|bool $value Attribute value
      */
     public function setAttribute(string $name, string|bool $value): self {
-        if (! $value ) {
+        $old = $this->attributes[$name] ?? null;
+        if ( $value === false ) {
             unset( $this->attributes[$name] );
+        } else {
+            $this->attributes[$name] = $value;
         }
-        $this->attributes[$name] = $value;
+        if ( isset( $this->callbacks[$name] ) ) {
+            foreach ($this->callbacks[$name] as $callback) {
+                $callback($value, $old);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * Set attributes
+     * @param array $attributes Attributes array
+     */
+    public function setAttributes(array $attributes): self {
+        if ( $attributes ) {
+            foreach($attributes as $name => $value) {
+                $this->setAttribute($name, $value);
+            }
+        }
         return $this;
     }
 
@@ -109,7 +86,7 @@ trait HasAttributes {
      * Build attributes
      */
     public function buildAttributes(array $extra = []): string {
-        $attributes = array_merge($this->attributes, $extra);
+        $attributes = array_replace($extra, $this->attributes);
         $attributes = array_filter($attributes);
         ksort($attributes);
         return join(' ', array_map(function($key) use ($attributes){
@@ -118,5 +95,19 @@ trait HasAttributes {
             }
             return sprintf('%s="%s"', $key, $attributes[$key]);
         }, array_keys($attributes)));
+    }
+
+    /**
+     * On attribute change event handler
+     * @param  string  $name     Attribute name
+     * @param  Closure $callback Callback
+     * @return $this
+     */
+    public function onAttributeChanged(string $name, Closure $callback): self {
+        if (! isset( $this->callbacks[$name] ) ) {
+            $this->callbacks[$name] = [];
+        }
+        $this->callbacks[$name][] = $callback;
+        return $this;
     }
 }
